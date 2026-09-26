@@ -41,22 +41,22 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
   const transitCost = estimatedTotalCost - (accommodationCost + foodCost + activitiesCost);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-neutral-950/80 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-3xl my-8 rounded-2xl border border-neutral-800 bg-neutral-900 shadow-2xl overflow-hidden text-neutral-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-3xl my-8 rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden text-slate-800">
         {/* Modal Hero Banner */}
-        <div className="relative h-60 w-full overflow-hidden bg-neutral-950">
+        <div className="relative h-64 w-full overflow-hidden bg-slate-900">
           <img
             src={destination.image}
             alt={destination.name}
             referrerPolicy="no-referrer"
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
 
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900/80 backdrop-blur-md text-neutral-300 hover:text-white hover:bg-neutral-800 transition-colors border border-neutral-700/60"
+            className="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-md text-slate-700 hover:text-slate-950 hover:bg-white transition-colors border border-slate-200/80 shadow-sm"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -64,11 +64,11 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
 
           {/* Top Badges */}
           <div className="absolute top-4 left-4 flex items-center gap-2">
-            <span className="flex items-center justify-center h-8 px-2.5 rounded-lg bg-neutral-900/90 backdrop-blur-md border border-neutral-700/80 text-xs font-bold text-white shadow-md">
+            <span className="flex items-center justify-center h-8 px-3 rounded-xl bg-gradient-to-br from-amber-400 via-rose-500 to-purple-600 text-xs font-black text-white shadow-md">
               Option #{rank}
             </span>
-            <span className="flex items-center gap-1.5 h-8 px-3 rounded-lg bg-sky-500/20 backdrop-blur-md border border-sky-500/40 text-xs font-bold text-sky-300 shadow-md">
-              <Sparkles className="h-3.5 w-3.5" />
+            <span className="flex items-center gap-1.5 h-8 px-3 rounded-xl bg-white/90 backdrop-blur-md border border-white/40 text-xs font-bold text-sky-900 shadow-md">
+              <Sparkles className="h-3.5 w-3.5 text-sky-600" />
               <span>{matchScore}% Compatibility</span>
             </span>
           </div>
@@ -76,23 +76,23 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           {/* Hero Bottom Title */}
           <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between gap-4">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight drop-shadow">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
                 {destination.name}
               </h2>
-              <p className="text-sm text-neutral-300 font-medium drop-shadow flex items-center gap-2 mt-0.5">
-                <span>{destination.country}</span>
+              <p className="text-sm text-slate-200 font-semibold drop-shadow flex items-center gap-2 mt-0.5">
+                <span className="text-white">{destination.country}</span>
                 <span aria-hidden="true">·</span>
                 <span>{destination.continent}</span>
                 <span aria-hidden="true">·</span>
-                <span className="text-sky-300 font-semibold">Best Season: {destination.bestSeason}</span>
+                <span className="text-sky-300 font-bold">Best Season: {destination.bestSeason}</span>
               </p>
             </div>
 
             <div className="text-right shrink-0">
-              <span className="text-xl sm:text-2xl font-bold text-white font-mono tabular-nums drop-shadow">
+              <span className="text-xl sm:text-2xl font-black text-emerald-300 font-mono tabular-nums drop-shadow-md">
                 {formatPrice(estimatedTotalCost, currency)}
               </span>
-              <p className="text-xs text-neutral-300 font-medium">
+              <p className="text-xs text-slate-200 font-medium">
                 {tripDays} days · {formatPrice(dailyCost, currency)}/day
               </p>
             </div>
@@ -103,76 +103,76 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
         <div className="max-h-[60vh] overflow-y-auto p-6 space-y-7">
           {/* Tagline & Overview */}
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-sky-400">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-sky-700">
               {destination.tagline}
             </h3>
-            <p className="text-sm text-neutral-300 leading-relaxed">
+            <p className="text-sm text-slate-700 leading-relaxed font-normal">
               {destination.description}
             </p>
           </div>
 
           {/* Compatibility Breakdown Bars */}
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Personalized Compatibility Breakdown
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
               <div className="space-y-1">
-                <div className="flex justify-between text-neutral-400">
+                <div className="flex justify-between text-slate-600 font-medium">
                   <span>Budget Fit</span>
-                  <span className="font-mono text-emerald-400 font-semibold">{breakdown.budget}%</span>
+                  <span className="font-mono text-emerald-700 font-bold">{breakdown.budget}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${breakdown.budget}%` }} />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between text-neutral-400">
+                <div className="flex justify-between text-slate-600 font-medium">
                   <span>Duration Fit</span>
-                  <span className="font-mono text-sky-400 font-semibold">{breakdown.days}%</span>
+                  <span className="font-mono text-sky-700 font-bold">{breakdown.days}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div className="h-full bg-sky-500 rounded-full" style={{ width: `${breakdown.days}%` }} />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between text-neutral-400">
+                <div className="flex justify-between text-slate-600 font-medium">
                   <span>Smoking Fit</span>
-                  <span className="font-mono text-amber-400 font-semibold">{breakdown.smoking}%</span>
+                  <span className="font-mono text-amber-700 font-bold">{breakdown.smoking}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div className="h-full bg-amber-500 rounded-full" style={{ width: `${breakdown.smoking}%` }} />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between text-neutral-400">
+                <div className="flex justify-between text-slate-600 font-medium">
                   <span>Drinking Culture</span>
-                  <span className="font-mono text-purple-400 font-semibold">{breakdown.drinking}%</span>
+                  <span className="font-mono text-purple-700 font-bold">{breakdown.drinking}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div className="h-full bg-purple-500 rounded-full" style={{ width: `${breakdown.drinking}%` }} />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between text-neutral-400">
+                <div className="flex justify-between text-slate-600 font-medium">
                   <span>Sport & Outdoors</span>
-                  <span className="font-mono text-cyan-400 font-semibold">{breakdown.sport}%</span>
+                  <span className="font-mono text-cyan-700 font-bold">{breakdown.sport}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div className="h-full bg-cyan-500 rounded-full" style={{ width: `${breakdown.sport}%` }} />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between text-neutral-400">
+                <div className="flex justify-between text-slate-600 font-medium">
                   <span>Club Scene</span>
-                  <span className="font-mono text-pink-400 font-semibold">{breakdown.club}%</span>
+                  <span className="font-mono text-pink-700 font-bold">{breakdown.club}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
                   <div className="h-full bg-pink-500 rounded-full" style={{ width: `${breakdown.club}%` }} />
                 </div>
               </div>
@@ -182,8 +182,8 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
           {/* Section: Curated Events & Highlights */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Ticket className="h-4 w-4 text-sky-400" />
-              <h4 className="text-sm font-bold text-white tracking-tight">
+              <Ticket className="h-4 w-4 text-sky-600" />
+              <h4 className="text-sm font-bold text-slate-900 tracking-tight">
                 Curated Events, Festivals & Activities
               </h4>
             </div>
@@ -192,28 +192,25 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
               {destination.events.map((evt) => (
                 <div
                   key={evt.id}
-                  className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-3.5 space-y-1.5"
+                  className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 space-y-1.5"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <h5 className="text-sm font-semibold text-white">
+                    <h5 className="text-sm font-bold text-slate-900">
                       {evt.title}
                     </h5>
-                    <span className="text-xs font-mono font-semibold text-emerald-400">
+                    <span className="text-xs text-emerald-700 font-bold font-mono">
                       {evt.priceNote}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-neutral-400">
+                  <div className="flex items-center gap-2 text-xs text-slate-600">
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5 text-neutral-500" />
+                      <Clock className="h-3.5 w-3.5 text-slate-400" />
                       {evt.timeframe}
                     </span>
                     <span aria-hidden="true">·</span>
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3.5 w-3.5 text-neutral-500" />
-                      {evt.location}
-                    </span>
+                    <span>{evt.location}</span>
                   </div>
-                  <p className="text-xs text-neutral-300 leading-relaxed pt-0.5">
+                  <p className="text-xs text-slate-600 leading-relaxed pt-0.5">
                     {evt.description}
                   </p>
                 </div>
@@ -221,110 +218,75 @@ export const DestinationDetailModal: React.FC<DestinationDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Lifestyle Guidelines & Top Venues */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Smoking Details */}
-            <div className="rounded-xl border border-neutral-800 bg-neutral-950/50 p-4 space-y-2">
-              <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider">
-                <Flame className="h-4 w-4" />
-                <span>Smoking Regulations & Culture</span>
-              </div>
-              <p className="text-xs text-neutral-300 leading-relaxed">
-                {destination.smokingPolicy}
-              </p>
+          {/* Budget Breakdown Analysis */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4 text-emerald-600" />
+              <h4 className="text-sm font-bold text-slate-900 tracking-tight">
+                Estimated Budget Breakdown ({tripDays} Days)
+              </h4>
             </div>
 
-            {/* Drinking Details */}
-            <div className="rounded-xl border border-neutral-800 bg-neutral-950/50 p-4 space-y-2">
-              <div className="flex items-center gap-2 text-purple-400 text-xs font-bold uppercase tracking-wider">
-                <Wine className="h-4 w-4" />
-                <span>Beverage Scene & Culture</span>
-              </div>
-              <p className="text-xs text-neutral-300 leading-relaxed">
-                {destination.drinkingScene}
-              </p>
-            </div>
-
-            {/* Sport Facilities */}
-            <div className="rounded-xl border border-neutral-800 bg-neutral-950/50 p-4 space-y-2">
-              <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider">
-                <Activity className="h-4 w-4" />
-                <span>Active Sports & Outdoor Pursuits</span>
-              </div>
-              <ul className="text-xs text-neutral-300 space-y-1 list-disc list-inside">
-                {destination.sportActivities.map((act, idx) => (
-                  <li key={idx}>{act}</li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Nightclubs & Venues */}
-            <div className="rounded-xl border border-neutral-800 bg-neutral-950/50 p-4 space-y-2">
-              <div className="flex items-center gap-2 text-pink-400 text-xs font-bold uppercase tracking-wider">
-                <Music className="h-4 w-4" />
-                <span>Top Nightclubs & Evening Hotspots</span>
-              </div>
-              <ul className="text-xs text-neutral-300 space-y-1 list-disc list-inside">
-                {destination.clubVenues.map((venue, idx) => (
-                  <li key={idx}>{venue}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Budget Breakdown Summary */}
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-              Estimated {tripDays}-Day Budget Allocation ({formatPrice(estimatedTotalCost, currency)})
-            </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div className="p-2.5 rounded-lg bg-neutral-900 border border-neutral-800 space-y-1">
-                <span className="text-neutral-400 block text-[11px]">Lodging & Stays</span>
-                <span className="font-mono font-bold text-white text-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-slate-500 font-medium block">Accommodation</span>
+                <span className="text-base font-bold text-slate-900 font-mono mt-0.5 block">
                   {formatPrice(accommodationCost, currency)}
                 </span>
+                <span className="text-[10px] text-slate-500">42% of budget</span>
               </div>
-              <div className="p-2.5 rounded-lg bg-neutral-900 border border-neutral-800 space-y-1">
-                <span className="text-neutral-400 block text-[11px]">Food & Dining</span>
-                <span className="font-mono font-bold text-white text-sm">
+
+              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-slate-500 font-medium block">Dining & Drinks</span>
+                <span className="text-base font-bold text-slate-900 font-mono mt-0.5 block">
                   {formatPrice(foodCost, currency)}
                 </span>
+                <span className="text-[10px] text-slate-500">28% of budget</span>
               </div>
-              <div className="p-2.5 rounded-lg bg-neutral-900 border border-neutral-800 space-y-1">
-                <span className="text-neutral-400 block text-[11px]">Activities & Nightlife</span>
-                <span className="font-mono font-bold text-white text-sm">
+
+              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-slate-500 font-medium block">Activities & Sports</span>
+                <span className="text-base font-bold text-slate-900 font-mono mt-0.5 block">
                   {formatPrice(activitiesCost, currency)}
                 </span>
+                <span className="text-[10px] text-slate-500">18% of budget</span>
               </div>
-              <div className="p-2.5 rounded-lg bg-neutral-900 border border-neutral-800 space-y-1">
-                <span className="text-neutral-400 block text-[11px]">Local Transit</span>
-                <span className="font-mono font-bold text-white text-sm">
+
+              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+                <span className="text-slate-500 font-medium block">Transit & Other</span>
+                <span className="text-base font-bold text-slate-900 font-mono mt-0.5 block">
                   {formatPrice(transitCost, currency)}
                 </span>
+                <span className="text-[10px] text-slate-500">12% of budget</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-between border-t border-neutral-800/80 px-6 py-4 bg-neutral-950/80">
-          <button
-            onClick={onClose}
-            className="rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-xs font-semibold text-neutral-300 hover:text-white hover:bg-neutral-700 transition-colors"
-          >
-            Close Guide
-          </button>
+        <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4 bg-slate-50">
+          <span className="text-xs text-slate-500 font-medium">
+            Coordinates: {destination.coordinates[0].toFixed(2)}°N, {destination.coordinates[1].toFixed(2)}°E
+          </span>
 
-          <button
-            onClick={() => {
-              onFocusOnMap();
-              onClose();
-            }}
-            className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-5 py-2 text-xs font-semibold text-white hover:bg-sky-400 transition-colors shadow-sm"
-          >
-            <MapPin className="h-4 w-4" />
-            <span>Focus on Map Pin</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onClose}
+              className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition-colors shadow-xs"
+            >
+              Close
+            </button>
+            <button
+              onClick={() => {
+                onFocusOnMap();
+                onClose();
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-500 via-teal-400 to-emerald-400 hover:from-sky-600 hover:to-emerald-500 px-4 py-2 text-xs font-bold text-white transition-all shadow-md active:scale-95"
+            >
+              <MapPin className="h-3.5 w-3.5" />
+              <span>Focus on Map</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

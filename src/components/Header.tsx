@@ -1,5 +1,5 @@
 import React from 'react';
-import { SlidersHorizontal, Compass, RefreshCw } from 'lucide-react';
+import { Compass, MapPin, SlidersHorizontal, RefreshCw } from 'lucide-react';
 import { CurrencyCode } from '../types';
 
 interface HeaderProps {
@@ -8,6 +8,8 @@ interface HeaderProps {
   onOpenPreferences: () => void;
   onResetPreferences: () => void;
   matchesCount: number;
+  currentLocation: string | null;
+  onOpenLocationWindow: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,86 +18,75 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenPreferences,
   onResetPreferences,
   matchesCount,
+  currentLocation,
+  onOpenLocationWindow,
 }) => {
   return (
-    <header className="sticky top-0 z-40 h-16 w-full border-b border-neutral-800/80 bg-neutral-950/90 backdrop-blur-md px-4 sm:px-6">
-      <div className="mx-auto flex h-full items-center justify-between gap-4">
-        {/* Zone 1: Single text element wordmark in display face */}
+    <header className="sticky top-0 z-50 h-14 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-2xl px-4 sm:px-6 shadow-xs">
+      <div className="mx-auto flex h-full items-center justify-between gap-3">
+        {/* Zone 1: Colourful brand mark */}
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400">
-            <Compass className="h-5 w-5" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 via-teal-500 to-emerald-500 text-white shadow-md shadow-sky-500/20">
+            <Compass className="h-4 w-4" />
           </div>
           <a
             href="/"
-            className="text-lg font-bold tracking-tight text-white transition-opacity hover:opacity-90"
+            className="text-base font-extrabold tracking-wider text-slate-900 uppercase hover:text-sky-600 transition-colors"
           >
-            WanderMatch
+            Explorers
           </a>
         </div>
 
-        {/* Zone 2: Navigation / Quick links */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-neutral-400">
+        {/* Zone 2: Vibrant Location Button */}
+        <div className="flex items-center">
           <button
-            onClick={onOpenPreferences}
-            className="transition-colors hover:text-white"
+            onClick={onOpenLocationWindow}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-sky-300 bg-sky-50/80 hover:bg-sky-100 text-xs text-slate-800 transition-all shadow-xs active:scale-95"
+            title="Click to change your location"
           >
-            Budget & Days
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+            <MapPin className="h-3.5 w-3.5 text-sky-600 shrink-0" />
+            <span className="font-semibold text-slate-800 truncate max-w-[150px] sm:max-w-[220px]">
+              {currentLocation || 'What is your location?'}
+            </span>
           </button>
-          <button
-            onClick={onOpenPreferences}
-            className="transition-colors hover:text-white"
-          >
-            Lifestyle & Vibe
-          </button>
-          <a
-            href="#results"
-            className="transition-colors hover:text-white"
-          >
-            Matching Events
-          </a>
-          <a
-            href="#map-section"
-            className="transition-colors hover:text-white"
-          >
-            Interactive Map
-          </a>
-        </nav>
+        </div>
 
-        {/* Zone 3: 1-2 primary actions */}
-        <div className="flex items-center gap-3">
+        {/* Zone 3: Simplistic & Colorful Actions */}
+        <div className="flex items-center gap-2">
           {/* Currency Switcher */}
-          <div className="flex items-center rounded-lg border border-neutral-800 bg-neutral-900/90 p-0.5 text-xs font-semibold">
+          <div className="flex items-center rounded-xl border border-slate-200 bg-slate-100/90 p-0.5 text-xs font-semibold">
             {(['USD', 'EUR', 'GBP'] as CurrencyCode[]).map((c) => (
               <button
                 key={c}
                 onClick={() => onCurrencyChange(c)}
-                className={`rounded-md px-2.5 py-1 transition-all ${
+                className={`rounded-lg px-2.5 py-1 text-xs transition-all ${
                   currency === c
-                    ? 'bg-neutral-800 text-sky-400 shadow-sm'
-                    : 'text-neutral-400 hover:text-white'
+                    ? 'bg-gradient-to-r from-sky-500 to-teal-500 text-white font-bold shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                {c === 'USD' ? '$' : c === 'EUR' ? '€' : '£'} {c}
+                {c === 'USD' ? '$' : c === 'EUR' ? '€' : '£'}
               </button>
             ))}
           </div>
 
-          {/* Reset Filters Quick Button */}
+          {/* Reset Filters */}
           <button
             onClick={onResetPreferences}
-            title="Reset preferences to default"
-            className="hidden sm:flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-white hover:border-neutral-700 transition-colors"
+            title="Reset filters"
+            className="hidden sm:flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-amber-600 hover:border-amber-300 transition-colors shadow-xs"
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw className="h-3.5 w-3.5" />
           </button>
 
-          {/* Edit Preferences CTA */}
+          {/* Filters Button */}
           <button
             onClick={onOpenPreferences}
-            className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-3.5 py-2 text-xs font-semibold text-white transition-all hover:bg-sky-400 active:scale-98 shadow-sm shadow-sky-500/20 whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:from-sky-600 hover:to-purple-700 px-3.5 py-1.5 text-xs font-bold text-white transition-all shadow-sm active:scale-95 whitespace-nowrap"
           >
-            <SlidersHorizontal className="h-3.5 w-3.5" />
-            <span>Customize Criteria ({matchesCount})</span>
+            <SlidersHorizontal className="h-3 w-3" />
+            <span>Filters ({matchesCount})</span>
           </button>
         </div>
       </div>

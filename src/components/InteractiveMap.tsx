@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
-import { Layers, Maximize2, Sparkles, MapPin, ExternalLink } from 'lucide-react';
+import { Layers, Maximize2, MapPin } from 'lucide-react';
 import { MatchResult, CurrencyCode } from '../types';
 import { formatPrice } from '../utils/format';
 
@@ -9,6 +9,7 @@ interface InteractiveMapProps {
   selectedId: string | null;
   hoveredId: string | null;
   currency: CurrencyCode;
+  viewMode?: 'split' | 'list' | 'map';
   onSelectDestination: (id: string) => void;
   onOpenDetails: (match: MatchResult) => void;
 }
@@ -31,11 +32,75 @@ const TILE_LAYERS = {
   },
 };
 
+function isValidCoordinates(coords: unknown): coords is [number, number] {
+  if (!Array.isArray(coords) || coords.length < 2) return false;
+  const [lat, lng] = coords;
+  return (
+    typeof lat === 'number' &&
+    typeof lng === 'number' &&
+    !isNaN(lat) &&
+    !isNaN(lng) &&
+    isFinite(lat) &&
+    isFinite(lng) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180
+  );
+}
+
+function isMapRenderable(map: L.Map | null): boolean {
+  if (!map) return false;
+  try {
+    const container = map.getContainer();
+    if (!container) return false;
+    return container.clientWidth > 50 && container.clientHeight > 50;
+  } catch {
+    return false;
+  }
+}
+
+const safeFitBounds = (map: L.Map, bounds: L.LatLngBounds) => {
+  if (!isMapRenderable(map) || !bounds.isValid()) return;
+  try {
+    const container = map.getContainer();
+    const padX = Math.max(0, Math.min(40, Math.floor(container.clientWidth * 0.1)));
+    const padY = Math.max(0, Math.min(40, Math.floor(container.clientHeight * 0.1)));
+
+    map.invalidateSize({ pan: false });
+    map.fitBounds(bounds, {
+      padding: [padY, padX],
+      maxZoom: 6,
+      animate: false,
+    });
+  } catch (err) {
+    console.warn('Map safeFitBounds suppressed:', err);
+  }
+};
+
+const safeFlyTo = (map: L.Map, coords: [number, number], zoom = 8) => {
+  if (!isMapRenderable(map) || !isValidCoordinates(coords)) return;
+  try {
+    map.invalidateSize({ pan: false });
+    map.flyTo(coords, zoom, {
+      duration: 1.2,
+      easeLinearity: 0.25,
+    });
+  } catch {
+    try {
+      map.setView(coords, zoom);
+    } catch (e) {
+      console.warn('Map safeFlyTo suppressed:', e);
+    }
+  }
+};
+
 export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   matches,
   selectedId,
   hoveredId,
   currency,
+  viewMode = 'split',
   onSelectDestination,
   onOpenDetails,
 }) => {
@@ -43,7 +108,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const [activeTileKey, setActiveTileKey] = useState<keyof typeof TILE_LAYERS>('dark');
+  const [activeTileKey, setActiveTileKey] = useState<keyof typeof TILE_LAYERS>('voyager');
   const [showLayerMenu, setShowLayerMenu] = useState<boolean>(false);
 
   // Initialize Leaflet map
@@ -58,7 +123,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       zoom: initialZoom,
       minZoom: 2,
       maxZoom: 18,
-      zoomControl: false, // Custom position
+      zoomControl: false,
+      trackResize: true,
     });
 
     // Add zoom control to top-right
@@ -86,6 +152,56 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
     };
   }, []);
 
+  // Invalidate map size when viewMode changes or container un-hides
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    const timer = setTimeout(() => {
+      if (isMapRenderable(map)) {
+        map.invalidateSize({ pan: false });
+        if (selectedId) {
+          const match = matches.find((m) => m.destination.id === selectedId);
+          if (match && isValidCoordinates(match.destination.coordinates)) {
+            safeFlyTo(map, match.destination.coordinates, 8);
+            return;
+          }
+        }
+        const validCoords = matches
+          .map((m) => m.destination.coordinates)
+          .filter(isValidCoordinates);
+        if (validCoords.length > 0) {
+          safeFitBounds(map, L.latLngBounds(validCoords));
+        }
+      }
+    }, 120);
+
+    return () => clearTimeout(timer);
+  }, [viewMode]);
+
+  // Observe container resizing (e.g. split view toggles, window resize)
+  useEffect(() => {
+    const container = mapContainerRef.current;
+    const map = mapInstanceRef.current;
+    if (!container || !map) return;
+
+    let resizeTimer: any;
+    const observer = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (isMapRenderable(map)) {
+          map.invalidateSize({ pan: false });
+        }
+      }, 100);
+    });
+
+    observer.observe(container);
+    return () => {
+      clearTimeout(resizeTimer);
+      observer.disconnect();
+    };
+  }, []);
+
   // Update tile layer when activeTileKey changes
   useEffect(() => {
     if (!mapInstanceRef.current || !tileLayerRef.current) return;
@@ -103,22 +219,32 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
     if (matches.length === 0) return;
 
-    const latLngs: L.LatLngExpression[] = [];
+    const validLatLngs: [number, number][] = [];
 
     matches.forEach((item) => {
       const { destination, rank, matchScore, estimatedTotalCost, tripDays } = item;
+      if (!isValidCoordinates(destination.coordinates)) return;
+
       const isSelected = selectedId === destination.id;
       const isHovered = hoveredId === destination.id;
-      latLngs.push(destination.coordinates);
+      validLatLngs.push(destination.coordinates);
+
+      const pinGradient =
+        matchScore >= 88
+          ? 'linear-gradient(135deg, #10b981, #06b6d4)'
+          : matchScore >= 75
+          ? 'linear-gradient(135deg, #0284c7, #8b5cf6)'
+          : 'linear-gradient(135deg, #f59e0b, #ef4444)';
 
       // Custom HTML Dot Icon
       const markerHtml = `
         <div class="custom-pin-marker">
-          <div class="pin-dot ${isSelected ? 'is-active ring-4 ring-sky-400' : ''} ${isHovered ? 'scale-125' : ''}" style="
-            background: ${matchScore >= 85 ? '#0284c7' : matchScore >= 70 ? '#0d9488' : '#d97706'};
+          <div class="pin-dot ${isSelected ? 'is-active ring-4 ring-amber-300 scale-125' : ''} ${isHovered ? 'scale-125' : ''}" style="
+            background: ${pinGradient};
+            box-shadow: 0 0 16px rgba(14, 165, 233, 0.6), 0 2px 8px rgba(0,0,0,0.4);
           ">
-            <span>${rank}</span>
-            ${isSelected || isHovered ? '<div class="pin-pulse"></div>' : ''}
+            <span style="font-weight: 800; font-size: 13px;">${rank}</span>
+            ${isSelected || isHovered ? '<div class="pin-pulse" style="border-color: #38bdf8;"></div>' : ''}
           </div>
         </div>
       `;
@@ -193,16 +319,19 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       layer.addLayer(marker);
 
-      // If this marker is selected, open popup
-      if (isSelected) {
-        marker.openPopup();
+      // If this marker is selected and map is ready, open popup
+      if (isSelected && isMapRenderable(map)) {
+        try {
+          marker.openPopup();
+        } catch {
+          // Ignored if map container is not yet styled
+        }
       }
     });
 
-    // Auto-fit bounds if no individual selection is active and we have matches
-    if (!selectedId && latLngs.length > 0) {
-      const bounds = L.latLngBounds(latLngs);
-      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 6 });
+    // Auto-fit bounds ONLY if no individual selection is active and map is renderable
+    if (!selectedId && validLatLngs.length > 0 && isMapRenderable(map)) {
+      safeFitBounds(map, L.latLngBounds(validLatLngs));
     }
   }, [matches, selectedId, hoveredId, currency]);
 
@@ -210,20 +339,21 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   useEffect(() => {
     if (!selectedId || !mapInstanceRef.current) return;
     const match = matches.find((m) => m.destination.id === selectedId);
-    if (match) {
-      mapInstanceRef.current.flyTo(match.destination.coordinates, 8, {
-        duration: 1.4,
-        easeLinearity: 0.25,
-      });
+    if (match && isValidCoordinates(match.destination.coordinates)) {
+      safeFlyTo(mapInstanceRef.current, match.destination.coordinates, 8);
     }
-  }, [selectedId]);
+  }, [selectedId, matches]);
 
   // Reset to view all destinations
   const handleFitAll = () => {
-    if (!mapInstanceRef.current || matches.length === 0) return;
-    const latLngs = matches.map((m) => m.destination.coordinates);
-    const bounds = L.latLngBounds(latLngs);
-    mapInstanceRef.current.fitBounds(bounds, { padding: [60, 60], maxZoom: 6 });
+    const map = mapInstanceRef.current;
+    if (!map || matches.length === 0 || !isMapRenderable(map)) return;
+    const validCoords = matches
+      .map((m) => m.destination.coordinates)
+      .filter(isValidCoordinates);
+    if (validCoords.length > 0) {
+      safeFitBounds(map, L.latLngBounds(validCoords));
+    }
   };
 
   return (
@@ -247,14 +377,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         <div className="relative">
           <button
             onClick={() => setShowLayerMenu(!showLayerMenu)}
-            className="flex items-center gap-1.5 rounded-lg border border-neutral-800 bg-neutral-900/90 backdrop-blur-md px-3 py-1.5 text-xs font-semibold text-white shadow-lg hover:bg-neutral-800 transition-colors"
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white/95 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-slate-800 shadow-md hover:bg-slate-50 transition-colors"
           >
-            <Layers className="h-3.5 w-3.5 text-sky-400" />
+            <Layers className="h-3.5 w-3.5 text-sky-600" />
             <span>Map Style</span>
           </button>
 
           {showLayerMenu && (
-            <div className="absolute top-full left-0 mt-1.5 w-36 rounded-xl border border-neutral-800 bg-neutral-900 p-1 shadow-xl z-20">
+            <div className="absolute top-full left-0 mt-1.5 w-36 rounded-xl border border-slate-200 bg-white p-1 shadow-xl z-20">
               {(Object.keys(TILE_LAYERS) as (keyof typeof TILE_LAYERS)[]).map((key) => (
                 <button
                   key={key}
@@ -262,10 +392,10 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
                     setActiveTileKey(key);
                     setShowLayerMenu(false);
                   }}
-                  className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+                  className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg font-semibold transition-colors ${
                     activeTileKey === key
-                      ? 'bg-sky-500/20 text-sky-300'
-                      : 'text-neutral-300 hover:bg-neutral-800'
+                      ? 'bg-sky-50 text-sky-700 font-bold'
+                      : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
                   {TILE_LAYERS[key].name}
@@ -277,17 +407,17 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       </div>
 
       {/* Map Legend at Bottom Right */}
-      <div className="absolute bottom-4 right-4 z-10 hidden sm:flex items-center gap-3 rounded-lg border border-neutral-800/80 bg-neutral-900/90 backdrop-blur-md px-3 py-1.5 text-[11px] text-neutral-300 shadow-lg">
-        <span className="font-semibold text-neutral-400">Match score:</span>
-        <div className="flex items-center gap-1">
+      <div className="absolute bottom-4 right-4 z-10 hidden sm:flex items-center gap-3 rounded-xl border border-slate-200 bg-white/95 backdrop-blur-md px-3.5 py-1.5 text-[11px] text-slate-700 shadow-md">
+        <span className="font-bold text-slate-500">Match score:</span>
+        <div className="flex items-center gap-1 font-semibold">
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+          <span>88%+ Top</span>
+        </div>
+        <div className="flex items-center gap-1 font-semibold">
           <span className="h-2.5 w-2.5 rounded-full bg-sky-500"></span>
-          <span>90%+ High</span>
+          <span>75-87% High</span>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="h-2.5 w-2.5 rounded-full bg-teal-500"></span>
-          <span>75-89% Great</span>
-        </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 font-semibold">
           <span className="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
           <span>60-74% Fair</span>
         </div>
@@ -295,11 +425,11 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       {/* Empty State Banner Overlay if 0 matches */}
       {matches.length === 0 && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center p-6 bg-neutral-950/60 backdrop-blur-xs pointer-events-none">
-          <div className="rounded-xl border border-neutral-800 bg-neutral-900/95 p-5 text-center shadow-2xl max-w-sm pointer-events-auto">
-            <MapPin className="h-8 w-8 text-neutral-500 mx-auto mb-2" />
-            <h4 className="text-sm font-bold text-white">No Destination Dots to Display</h4>
-            <p className="text-xs text-neutral-400 mt-1">
+        <div className="absolute inset-0 z-10 flex items-center justify-center p-6 bg-slate-900/30 backdrop-blur-xs pointer-events-none">
+          <div className="rounded-2xl border border-slate-200 bg-white/95 p-6 text-center shadow-2xl max-w-sm pointer-events-auto">
+            <MapPin className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+            <h4 className="text-base font-bold text-slate-900">No Destination Dots to Display</h4>
+            <p className="text-xs text-slate-600 mt-1">
               Adjust your budget or lifestyle preferences on the left to populate the map with matching locations.
             </p>
           </div>

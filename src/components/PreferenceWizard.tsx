@@ -57,21 +57,21 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
   const continents = ['All', 'Europe', 'Asia', 'Americas', 'Africa', 'Oceania'];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-neutral-950/80 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-3xl my-8 rounded-2xl border border-neutral-800 bg-neutral-900 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-3xl my-8 rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden text-slate-800">
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-neutral-800/80 px-6 py-4.5 bg-neutral-950/60">
+        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4.5 bg-slate-50">
           <div>
-            <h2 className="text-lg font-bold text-white tracking-tight">
+            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
               Customize Your Travel Criteria
             </h2>
-            <p className="text-xs text-neutral-400 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Adjust budget, duration, and lifestyle habits to surface up to 10 curated destinations.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+            className="rounded-xl p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-200 transition-colors"
             aria-label="Close modal"
           >
             <X className="h-5 w-5" />
@@ -84,12 +84,12 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4 text-emerald-400" />
-                <label className="text-sm font-semibold text-neutral-200">
+                <DollarSign className="h-4 w-4 text-emerald-600" />
+                <label className="text-sm font-bold text-slate-900">
                   Range of Money (Total Trip Budget)
                 </label>
               </div>
-              <span className="font-mono text-xs font-semibold text-emerald-400 tabular-nums">
+              <span className="font-mono text-xs font-bold text-emerald-700 tabular-nums">
                 {formatPrice(preferences.minMoney, preferences.currency)} — {formatPrice(preferences.maxMoney, preferences.currency)}
               </span>
             </div>
@@ -106,10 +106,10 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                     onClick={() =>
                       onUpdatePreferences({ minMoney: preset.min, maxMoney: preset.max })
                     }
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       isActive
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                        : 'bg-neutral-800/80 text-neutral-400 border border-neutral-700/60 hover:text-neutral-200'
+                        ? 'bg-emerald-100 text-emerald-950 border border-emerald-400 shadow-xs'
+                        : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
                     }`}
                   >
                     {preset.label} ({formatPrice(preset.min, preferences.currency)}–{formatPrice(preset.max, preferences.currency)})
@@ -121,9 +121,9 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
             {/* Sliders for Min and Max Money */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
               <div className="space-y-1.5">
-                <div className="flex justify-between text-xs text-neutral-400">
+                <div className="flex justify-between text-xs text-slate-600">
                   <span>Minimum Budget:</span>
-                  <span className="font-mono tabular-nums text-white">
+                  <span className="font-mono tabular-nums text-slate-900 font-bold">
                     {formatPrice(preferences.minMoney, preferences.currency)}
                   </span>
                 </div>
@@ -136,14 +136,14 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                   onChange={(e) =>
                     onUpdatePreferences({ minMoney: Number(e.target.value) })
                   }
-                  className="w-full accent-emerald-500 cursor-pointer h-1.5 bg-neutral-800 rounded-lg"
+                  className="w-full accent-emerald-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <div className="flex justify-between text-xs text-neutral-400">
+                <div className="flex justify-between text-xs text-slate-600">
                   <span>Maximum Budget:</span>
-                  <span className="font-mono tabular-nums text-white">
+                  <span className="font-mono tabular-nums text-slate-900 font-bold">
                     {formatPrice(preferences.maxMoney, preferences.currency)}
                   </span>
                 </div>
@@ -156,22 +156,22 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                   onChange={(e) =>
                     onUpdatePreferences({ maxMoney: Number(e.target.value) })
                   }
-                  className="w-full accent-emerald-500 cursor-pointer h-1.5 bg-neutral-800 rounded-lg"
+                  className="w-full accent-emerald-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 2: Range of Days */}
-          <div className="space-y-3 pt-2 border-t border-neutral-800/60">
+          <div className="space-y-3 pt-2 border-t border-slate-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-sky-400" />
-                <label className="text-sm font-semibold text-neutral-200">
+                <Calendar className="h-4 w-4 text-sky-600" />
+                <label className="text-sm font-bold text-slate-900">
                   Range of Days (Duration)
                 </label>
               </div>
-              <span className="font-mono text-xs font-semibold text-sky-400 tabular-nums">
+              <span className="font-mono text-xs font-bold text-sky-700 tabular-nums">
                 {preferences.minDays} — {preferences.maxDays} Days
               </span>
             </div>
@@ -188,10 +188,10 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                     onClick={() =>
                       onUpdatePreferences({ minDays: preset.min, maxDays: preset.max })
                     }
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       isActive
-                        ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-sm'
-                        : 'bg-neutral-800/80 text-neutral-400 border border-neutral-700/60 hover:text-neutral-200'
+                        ? 'bg-sky-100 text-sky-950 border border-sky-400 shadow-xs'
+                        : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
                     }`}
                   >
                     {preset.label}
@@ -203,9 +203,9 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
             {/* Sliders for Min and Max Days */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
               <div className="space-y-1.5">
-                <div className="flex justify-between text-xs text-neutral-400">
+                <div className="flex justify-between text-xs text-slate-600">
                   <span>Minimum Days:</span>
-                  <span className="font-mono tabular-nums text-white">
+                  <span className="font-mono tabular-nums text-slate-900 font-bold">
                     {preferences.minDays} days
                   </span>
                 </div>
@@ -218,14 +218,14 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                   onChange={(e) =>
                     onUpdatePreferences({ minDays: Number(e.target.value) })
                   }
-                  className="w-full accent-sky-500 cursor-pointer h-1.5 bg-neutral-800 rounded-lg"
+                  className="w-full accent-sky-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <div className="flex justify-between text-xs text-neutral-400">
+                <div className="flex justify-between text-xs text-slate-600">
                   <span>Maximum Days:</span>
-                  <span className="font-mono tabular-nums text-white">
+                  <span className="font-mono tabular-nums text-slate-900 font-bold">
                     {preferences.maxDays} days
                   </span>
                 </div>
@@ -238,24 +238,24 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                   onChange={(e) =>
                     onUpdatePreferences({ maxDays: Number(e.target.value) })
                   }
-                  className="w-full accent-sky-500 cursor-pointer h-1.5 bg-neutral-800 rounded-lg"
+                  className="w-full accent-sky-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 3: Preferences Grid (Smoking, Drinking, Sport, Club) */}
-          <div className="space-y-5 pt-2 border-t border-neutral-800/60">
-            <h3 className="text-sm font-semibold text-neutral-200">
+          <div className="space-y-5 pt-2 border-t border-slate-200">
+            <h3 className="text-sm font-bold text-slate-900">
               Lifestyle & Atmosphere Preferences
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Smoking Preference */}
-              <div className="rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 space-y-2.5">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <Flame className="h-4 w-4 text-amber-400" />
-                  <span className="text-xs font-semibold text-neutral-200 uppercase tracking-wider">
+                  <Flame className="h-4 w-4 text-amber-500" />
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                     Smoking Policy
                   </span>
                 </div>
@@ -270,17 +270,17 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                     <button
                       key={opt.key}
                       onClick={() => onUpdatePreferences({ smoking: opt.key })}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg text-center transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl text-center transition-all ${
                         preferences.smoking === opt.key
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-sm'
-                          : 'bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-neutral-200'
+                          ? 'bg-amber-100 text-amber-950 border border-amber-400 font-bold shadow-xs'
+                          : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'
                       }`}
                     >
-                      <span className="text-xs font-semibold">{opt.label}</span>
+                      <span className="text-xs">{opt.label}</span>
                     </button>
                   ))}
                 </div>
-                <p className="text-[11px] text-neutral-500 leading-tight">
+                <p className="text-[11px] text-slate-500 leading-tight">
                   {preferences.smoking === 'friendly' && 'Prefers destinations with accessible smoking terraces, shisha spots, and relaxed bylaws.'}
                   {preferences.smoking === 'strict' && 'Prioritizes destinations with strict non-smoking ordinances and pristine outdoor air.'}
                   {preferences.smoking === 'flexible' && 'No strict preference on smoking regulations.'}
@@ -288,10 +288,10 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
               </div>
 
               {/* Drinking Preference */}
-              <div className="rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 space-y-2.5">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <Wine className="h-4 w-4 text-purple-400" />
-                  <span className="text-xs font-semibold text-neutral-200 uppercase tracking-wider">
+                  <Wine className="h-4 w-4 text-purple-500" />
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                     Drinking Culture
                   </span>
                 </div>
@@ -306,17 +306,17 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                     <button
                       key={opt.key}
                       onClick={() => onUpdatePreferences({ drinking: opt.key })}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg text-center transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl text-center transition-all ${
                         preferences.drinking === opt.key
-                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/50 shadow-sm'
-                          : 'bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-neutral-200'
+                          ? 'bg-purple-100 text-purple-950 border border-purple-400 font-bold shadow-xs'
+                          : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'
                       }`}
                     >
-                      <span className="text-xs font-semibold">{opt.label}</span>
+                      <span className="text-xs">{opt.label}</span>
                     </button>
                   ))}
                 </div>
-                <p className="text-[11px] text-neutral-500 leading-tight">
+                <p className="text-[11px] text-slate-500 leading-tight">
                   {preferences.drinking === 'high' && 'Craft microbreweries, wine bodegas, cocktail mixology, and lively bar streets.'}
                   {preferences.drinking === 'moderate' && 'Casual dinner pairings, sunny spritzes, and relaxed patio drinks.'}
                   {preferences.drinking === 'dry' && 'Wellness retreats, zero-proof botanicals, artisan tea and fresh juiceries.'}
@@ -324,10 +324,10 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
               </div>
 
               {/* Sport Preference */}
-              <div className="rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 space-y-2.5">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-cyan-400" />
-                  <span className="text-xs font-semibold text-neutral-200 uppercase tracking-wider">
+                  <Activity className="h-4 w-4 text-cyan-600" />
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                     Sport & Outdoors
                   </span>
                 </div>
@@ -342,17 +342,17 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                     <button
                       key={opt.key}
                       onClick={() => onUpdatePreferences({ sport: opt.key })}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg text-center transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl text-center transition-all ${
                         preferences.sport === opt.key
-                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-sm'
-                          : 'bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-neutral-200'
+                          ? 'bg-cyan-100 text-cyan-950 border border-cyan-400 font-bold shadow-xs'
+                          : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'
                       }`}
                     >
-                      <span className="text-xs font-semibold">{opt.label}</span>
+                      <span className="text-xs">{opt.label}</span>
                     </button>
                   ))}
                 </div>
-                <p className="text-[11px] text-neutral-500 leading-tight">
+                <p className="text-[11px] text-slate-500 leading-tight">
                   {preferences.sport === 'adventure' && 'Big wave surfing, alpine summits, downhill bike trails, via ferrata and extreme outdoor sports.'}
                   {preferences.sport === 'moderate' && 'Scenic waterfront jogging, scenic cycling loops, beach volleyball, and paddleboarding.'}
                   {preferences.sport === 'relaxed' && 'Gentle botanical walks, thermal spa baths, and slow-paced sightseeing.'}
@@ -360,10 +360,10 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
               </div>
 
               {/* Club / Nightlife Preference */}
-              <div className="rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 space-y-2.5">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <Music className="h-4 w-4 text-pink-400" />
-                  <span className="text-xs font-semibold text-neutral-200 uppercase tracking-wider">
+                  <Music className="h-4 w-4 text-pink-500" />
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                     Club & Nightlife
                   </span>
                 </div>
@@ -378,17 +378,17 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                     <button
                       key={opt.key}
                       onClick={() => onUpdatePreferences({ club: opt.key })}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg text-center transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl text-center transition-all ${
                         preferences.club === opt.key
-                          ? 'bg-pink-500/20 text-pink-300 border border-pink-500/50 shadow-sm'
-                          : 'bg-neutral-900 text-neutral-400 border border-neutral-800 hover:text-neutral-200'
+                          ? 'bg-pink-100 text-pink-950 border border-pink-400 font-bold shadow-xs'
+                          : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-medium'
                       }`}
                     >
-                      <span className="text-xs font-semibold">{opt.label}</span>
+                      <span className="text-xs">{opt.label}</span>
                     </button>
                   ))}
                 </div>
-                <p className="text-[11px] text-neutral-500 leading-tight">
+                <p className="text-[11px] text-slate-500 leading-tight">
                   {preferences.club === 'clubs' && 'Underground warehouse raves, mega beach day clubs, and world-class DJ residencies.'}
                   {preferences.club === 'lounges' && 'Chic jazz bars, sunset rooftop dancefloors, and indie music spaces.'}
                   {preferences.club === 'quiet' && 'Peaceful evenings, tranquil dining, early morning wakeups without bass noise.'}
@@ -398,10 +398,10 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
           </div>
 
           {/* Section 4: Region / Continent Filter */}
-          <div className="space-y-2 pt-2 border-t border-neutral-800/60">
+          <div className="space-y-2 pt-2 border-t border-slate-200">
             <div className="flex items-center gap-2">
-              <Globe className="h-4 w-4 text-sky-400" />
-              <label className="text-sm font-semibold text-neutral-200">
+              <Globe className="h-4 w-4 text-sky-600" />
+              <label className="text-sm font-bold text-slate-900">
                 Geographic Region
               </label>
             </div>
@@ -412,10 +412,10 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
                   <button
                     key={continent}
                     onClick={() => onUpdatePreferences({ selectedContinent: continent })}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
                       isActive
-                        ? 'bg-sky-500 text-white shadow-sm'
-                        : 'bg-neutral-800/90 text-neutral-300 hover:bg-neutral-700'
+                        ? 'bg-sky-600 text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                     }`}
                   >
                     {continent}
@@ -427,25 +427,25 @@ export const PreferenceWizard: React.FC<PreferenceWizardProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-between border-t border-neutral-800/80 px-6 py-4 bg-neutral-950/70">
+        <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4 bg-slate-50">
           <button
             onClick={onReset}
-            className="flex items-center gap-1.5 text-xs font-medium text-neutral-400 hover:text-neutral-200 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span>Reset to defaults</span>
           </button>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs text-neutral-400">
+            <span className="text-xs text-slate-600">
               Matching:{' '}
-              <strong className="text-sky-400 font-semibold font-mono tabular-nums">
+              <strong className="text-sky-700 font-bold font-mono tabular-nums">
                 {matchingCount} options (max 10)
               </strong>
             </span>
             <button
               onClick={onClose}
-              className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-5 py-2 text-xs font-semibold text-white hover:bg-sky-400 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 via-teal-400 to-emerald-400 hover:from-sky-600 hover:to-emerald-500 px-5 py-2 text-xs font-bold text-white transition-all shadow-md active:scale-95"
             >
               <Check className="h-4 w-4" />
               <span>Apply & View Results</span>

@@ -1,1 +1,11 @@
-Prepare this completed app for GitHub Pages at https://yelenaker.github.io/Explorers/. Keep its design and features. Set the correct /Explorers/ base path, fix asset paths and routing, and add a GitHub Actions workflow to build and publish whenever I push to main. Verify the production build and explain any GitHub settings I must enable. If any feature needs a backend or private API key, tell me first—don’t remove it or expose secrets.
+<div align="center">
+
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+
+  <h1>Built with AI Studio</h2>
+
+  <p>The fastest path from prompt to production with Gemini.</p>
+
+  <a href="https://aistudio.google.com/apps">Start building</a>
+
+</div>

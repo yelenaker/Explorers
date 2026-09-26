@@ -74,3 +74,90 @@ export interface MatchResult {
     club: number;
   };
 }
+
+export interface Explorer {
+  id: string;
+  name: string;
+  callsign: string;
+  role: string;
+  avatar: string;
+  color: string;
+  email: string;
+  branchTag: string;
+}
+
+export interface Expedition {
+  id: string;
+  title: string;
+  codename: string;
+  region: string;
+  country: string;
+  lat: number;
+  lng: number;
+  terrain: string;
+  difficulty: 'Moderate' | 'Challenging' | 'Extreme' | string;
+  durationDays: number;
+  distanceKm: number;
+  elevationGainM: number;
+  status: 'Active' | 'Planning' | 'Completed' | string;
+  startDate: string;
+  endDate: string;
+  coverImage: string;
+  description: string;
+  leadExplorerId: string;
+  assignedExplorerIds: string[];
+}
+
+export interface Waypoint {
+  id: string;
+  expeditionId: string;
+  title: string;
+  day: number;
+  lat: number;
+  lng: number;
+  elevationM: number;
+  type: 'basecamp' | 'shelter' | 'viewpoint' | 'hazard' | 'summit' | 'water' | string;
+  notes: string;
+  visited: boolean;
+}
+
+export interface GearItem {
+  id: string;
+  expeditionId: string;
+  name: string;
+  category: string;
+  weightGrams: number;
+  assignedExplorerId: string;
+  packed: boolean;
+  isShared: boolean;
+  notes?: string;
+}
+
+export interface JournalEntry {
+  id: string;
+  expeditionId: string;
+  authorId: string;
+  timestamp: string;
+  title: string;
+  content: string;
+  locationName: string;
+  weather: string;
+  tempC: number;
+  altitudeM: number;
+  tags: string[];
+}
+
+export interface ItineraryDay {
+  id: string;
+  expeditionId: string;
+  dayNumber: number;
+  title: string;
+  startLocation: string;
+  endLocation: string;
+  distanceKm: number;
+  elevationGainM: number;
+  estimatedHours: number;
+  rations?: string;
+  highlights: string[];
+  completed: boolean;
+}
