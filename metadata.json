@@ -1,0 +1,8 @@
+{
+  "name": "WanderMatch - Travel Destination & Event Finder",
+  "description": "Discover your perfect travel destination based on your budget range, duration, and lifestyle preferences with an interactive split-screen list and map.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
