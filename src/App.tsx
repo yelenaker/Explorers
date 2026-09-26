@@ -157,8 +157,8 @@ export const App: React.FC = () => {
                 : viewMode === 'map'
                 ? 'hidden'
                 : hasSelectedPreferences
-                ? 'w-full lg:w-3/5 xl:w-2/3 shrink-0'
-                : 'w-full lg:w-1/2 xl:w-5/12 shrink-0'
+                ? 'w-full md:w-3/5 xl:w-2/3 shrink-0'
+                : 'w-full md:w-1/2 xl:w-5/12 shrink-0'
             }`}
           >
             <div className="h-full bg-white/80 backdrop-blur-md overflow-hidden border-r border-slate-200/80 shadow-xs">
@@ -186,7 +186,7 @@ export const App: React.FC = () => {
                 ? 'w-full'
                 : viewMode === 'list'
                 ? 'hidden'
-                : 'hidden lg:block lg:w-1/2 xl:w-7/12 flex-1'
+                : 'hidden md:block md:w-2/5 xl:w-7/12 flex-1'
             }`}
           >
             <InteractiveMap
@@ -228,7 +228,9 @@ export const App: React.FC = () => {
           onFocusOnMap={() => {
             if (activeDetailMatch) {
               handleSelectDestination(activeDetailMatch.destination.id);
-              if (viewMode === 'list') {
+              if (window.innerWidth < 768) {
+                setViewMode('map');
+              } else if (viewMode === 'list') {
                 setViewMode('split');
               }
             }

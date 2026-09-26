@@ -57,7 +57,7 @@ export const RivieraBackground: React.FC<RivieraBackgroundProps> = ({ children }
           videoLoaded ? 'opacity-85' : 'opacity-30'
         }`}
       >
-        <source src="/videos/riviera.webm" type="video/webm" />
+        <source src={`${import.meta.env.BASE_URL}videos/riviera.webm`} type="video/webm" />
         <source
           src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Nice_Port.webmhd.webm"
           type="video/webm"
